@@ -1,0 +1,3352 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Teakim
+{
+
+    class Program
+    {
+        class OrderItem
+        {
+            public string Name { get; set; }
+            public int Quantity { get; set; }
+            public double Price { get; set; }
+            public bool HasAddOns { get; set; }
+            public string add { get; set; }
+            public List<string> AddOns { get; set; }
+           
+        }
+
+        static void Main(string[] args)
+        {
+ 
+            string choice, choice3, choice1,choice4;
+            int total = 0, gtotal = 0, orderTotalWithAddOns = 0, orderTotalWithNoAddOns = 0, orderTotalWithAddOns1 = 0
+                , orderTotalWithNoAddOns1 = 0,sand = 0,sand1 = 0;
+            int ans1 = 15,quan;
+            string ans3;
+            double discount = 0.00, cTendered = 0.00;
+            Dictionary<string, OrderItem> orderedItems = new Dictionary<string, OrderItem>();
+            Dictionary<string, OrderItem> itemsWithAddOns = new Dictionary<string, OrderItem>();
+            Dictionary<string, OrderItem> Sandwiches = new Dictionary<string, OrderItem>();
+            Dictionary<string, OrderItem> itemsWithoutAddOns = new Dictionary<string, OrderItem>();
+
+            Dictionary<string, string> addOns = new Dictionary<string, string>
+            {
+                {"1", "Graham"},
+                {"2", "Nata"},
+                {"3", "Oreo"},
+                {"4", "Pearl"},
+                {"5", "Cheese"},
+                {"6", "Mango"}
+            };
+
+                DateTime currentTime = DateTime.Now;
+                Console.WriteLine("Current time: " + currentTime.ToString("HH:mm:ss"));
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("--------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("|                                          TEAKIM ORDERING SYSTEM                                            |");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("|                                     -Poblacion 3, Sta Cruz, Laguna-                                        |");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("--------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("|Smoothies           Medium Large  | \tHotdog Sandwich                          | \tBurgers              |");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("--------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                string[] column1Data = { "|A1 = Mango Graham    70.00 85.00  |", "|A2 = Mango Overload 120.00 135.00 |", "|A3 = Mango Cheese    75.00 90.00  |",
+                "|A4 = Chocolate       70.00 85.00  |","|A5 = Cookies N Cream 70.00 85.00  |","|A6 = Blackforest     75.00 90.00  |","|A7 = Coffee Latte    75.00 90.00  |"
+                ,"|A8 = Mocha           75.00 90.00  |","|A9 = Buko            70.00 85.00  |","|A10 = Buko Cheese    75.00 90.00  |"};
+                string[] column2Data = { "B1 = Overload(Giant Hotdog Brown) 65.00  |", "B2 = Overload(King Size Red)      55.00  |", "B3 = Overload(Hungarian Sausage)  75.00  |"
+                    , "B4 = Regular(King Size Red)       35.00  |", "B5 = Regular(Giant Hotdog Brown)  45.00  |",
+            "B6 = Regular(Hungarian Sausage)   55.00  |","                                         |"
+            ,"                                         |","                                         |","                                         |"};
+                string[] column3Data = { "C1 = Estofado 20.00  |", "C2 = Ham      20.00  |", "C3 = Cheese   20.00  |"
+                    , "C4 = Egg      20.00  |","C5 = Patty    20.00  |","C6 = Footlong 20.00  |"
+                    ,"                     |","                     |","                     |","                     |"};
+
+                int rows = Math.Max(column1Data.Length, Math.Max(column2Data.Length, column3Data.Length));
+
+                for (int i = 0; i < rows; i++)
+                {
+                    string column1Value = (i < column1Data.Length) ? column1Data[i] : "";
+                    string column2Value = (i < column2Data.Length) ? column2Data[i] : "";
+                    string column3Value = (i < column3Data.Length) ? column3Data[i] : "";
+
+                    Console.WriteLine($"{column1Value,-10}\t{column2Value,-10}\t{column3Value,-10}");
+                }
+
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("--------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            Label:
+                Console.Write("Enter Menu Code:    ");
+                choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "A1":
+                    case "a1":
+                    Label1:
+                        Console.WriteLine("M or L?"); //User will choose Medium Or Large
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int mgm = 70;
+                            string ans;
+                            string itemCode = "A1" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity"); //Enter the Quantity
+
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n"); 
+                                    goto Label16;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Graham, Size " + choice1, Quantity = quantityA1M, Price = mgm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Graham, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = mgm
+                            };
+                        Label8:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N"); //Add ons is adding 15 pesos each
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                //choosing Add ons
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+
+                                if (addOns.ContainsKey(ans3))
+                                {
+
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mgm + ans1) * quantityA1M; //the price of each smoothie will be added 15
+                                    Console.WriteLine("Your Order is Mango Graham, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        // If the item exists in the dictionary, just update the quantity and add-ons
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+
+                                    }
+                                    else
+                                    {
+                                        // If it doesn't exist, create a new entry for the item
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Graham, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = orderTotalWithAddOns,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false; // Indicates it doesn't have add-ons
+                                orderTotalWithNoAddOns += mgm * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Graham, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Overload, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mgm,
+                                    });
+                                }
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label8;
+                            }
+
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int mgl = 85;
+                            string ans;
+                            string itemCode = "A1" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Graham, Size " + choice1, Quantity = quantityA1M, Price = mgl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Graham, Size Large",
+                                Quantity = quantityA1M,
+                                Price = mgl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mgl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mango Graham, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Graham, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = orderTotalWithAddOns,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false; 
+                                orderTotalWithNoAddOns += mgl * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Graham, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Graham, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mgl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label1;
+                        }
+                    Label3:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        char ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label3;
+                        }
+                        Console.ReadLine();
+                        break;
+
+
+                    case "A2":
+                    case "a2":
+                    Label4:
+                        Console.WriteLine("M or L?"); 
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int mom = 120;
+                            string ans;
+                            string itemCode = "A2" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Overload, Size " + choice1, Quantity = quantityA1M, Price = mom });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Overload, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = mom
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mom + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mango Overload, Size Medium \nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Overload, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (mom + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false; 
+                                orderTotalWithNoAddOns += mom * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Overload, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Overload, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mom,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int mol = 135;
+                            string ans;
+                            string itemCode = "A2" + choice1;
+                            Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Overload, Size " + choice1, Quantity = quantityA1M, Price = mol });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Overload, Size Large",
+                                Quantity = quantityA1M,
+                                Price = mol
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mol + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mango Overload, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Overload, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (mol + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += mol * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Overload, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    // If the item exists in the dictionary, just update the quantity and add-ons
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    // If it doesn't exist, create a new entry for the item
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Overload, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mol,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label4;
+                        }
+                    Label5:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label5;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A3":
+                    case "a3":
+                    Label9:
+                        Console.WriteLine("M or L?"); //Medium or Large
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int mcm = 75;
+                            string ans;
+                            string itemCode = "A3" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Cheese, Size " + choice1, Quantity = quantityA1M, Price = mcm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Cheese, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = mcm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                //choosing Add ons
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mcm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mango Cheese, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        // If the item exists in the dictionary, just update the quantity and add-ons
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        // If it doesn't exist, create a new entry for the item
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Cheese, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (mcm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false; // Indicates it doesn't have add-ons
+                                orderTotalWithNoAddOns += mcm * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Cheese, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    // If the item exists in the dictionary, just update the quantity and add-ons
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    // If it doesn't exist, create a new entry for the item
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Cheese, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mcm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int mcl = 90;
+                            string ans;
+                            string itemCode = "A3" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mango Cheese, Size " + choice1, Quantity = quantityA1M, Price = mcl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mango Cheese, Size Large",
+                                Quantity = quantityA1M,
+                                Price = mcl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mcl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mango Cheese, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mango Cheese, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (mcl + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += mcl * quantityA1M;
+                                Console.WriteLine("Your Order is Mango Cheese, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    // If the item exists in the dictionary, just update the quantity and add-ons
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    // If it doesn't exist, create a new entry for the item
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mango Cheese, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mcl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label9;
+                        }
+                    Label10:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label10;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A4":
+                    case "a4":
+                    Label11:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int chm = 70;
+                            string ans;
+                            string itemCode = "A4" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Chocolate, Size " + choice1, Quantity = quantityA1M, Price = chm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Chocolate, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = chm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (chm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Chocolate, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Chocolate, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (chm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += chm * quantityA1M;
+                                Console.WriteLine("Your Order is Chocolate, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Chocolate, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = chm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int chl = 85;
+                            string ans;
+                            string itemCode = "A4" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Chocolate, Size " + choice1, Quantity = quantityA1M, Price = chl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Chocolate, Size Large",
+                                Quantity = quantityA1M,
+                                Price = chl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (chl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Chocolate, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Chocolate, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (chl + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += chl * quantityA1M;
+                                Console.WriteLine("Your Order is Chocolate, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Chocolate, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = chl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label11;
+                        }
+                    Label12:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label12;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A5":
+                    case "a5":
+                    Label17:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int cncm = 70;
+                            string ans;
+                            string itemCode = "A5" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Cookies & Cream, Size " + choice1, Quantity = quantityA1M, Price = cncm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Cookies & Cream, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = cncm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (cncm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Cookies & Cream, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Cookies & Cream, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (cncm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += cncm * quantityA1M;
+                                Console.WriteLine("Your Order is Cookies & Cream, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Cookies & Cream, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = cncm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int cncl = 85;
+                            string ans;
+                            string itemCode = "A5" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Cookies & Cream, Size " + choice1, Quantity = quantityA1M, Price = cncl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Cookies & Cream, Size Large",
+                                Quantity = quantityA1M,
+                                Price = cncl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (cncl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Cookies & Cream, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Cookies & Cream, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (cncl + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += cncl * quantityA1M;
+                                Console.WriteLine("Your Order is Cookies & Cream, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Cookies & Cream, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = cncl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label17;
+                        }
+                    Label18:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label18;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A6":
+                    case "a6":
+                    Label19:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int blm = 75;
+                            string ans;
+                            string itemCode = "A6" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "BlackForest, Size " + choice1, Quantity = quantityA1M, Price = blm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "BlackForest, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = blm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (blm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is BlackForest, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "BlackForest, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (blm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += blm * quantityA1M;
+                                Console.WriteLine("Your Order is BlackForest, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "BlackForest, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = blm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int bll = 90;
+                            string ans;
+                            string itemCode = "A6" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "BlackForest, Size " + choice1, Quantity = quantityA1M, Price = bll });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "BlackForest, Size Large",
+                                Quantity = quantityA1M,
+                                Price = bll
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (bll + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is BlackForest, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "BlackForest, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (bll + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += bll * quantityA1M;
+                                Console.WriteLine("Your Order is BlackForest, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "BlackForest, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = bll,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label19;
+                        }
+                    Label20:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label20;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A7":
+                    case "a7":
+                    Label21:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int clm = 75;
+                            string ans;
+                            string itemCode = "A7" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Coffee Latte, Size " + choice1, Quantity = quantityA1M, Price = clm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Coffee Latte, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = clm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (clm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Coffee Latte, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Coffee Latte, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (clm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += clm * quantityA1M;
+                                Console.WriteLine("Your Order is Coffee Latte, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Coffee Latte, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = clm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int cll = 90;
+                            string ans;
+                            string itemCode = "A7" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Coffee Latte, Size " + choice1, Quantity = quantityA1M, Price = cll });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Coffee Latte, Size Large",
+                                Quantity = quantityA1M,
+                                Price = cll
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (cll + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Coffee Latte, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Coffee Latte, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (cll + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += cll * quantityA1M;
+                                Console.WriteLine("Your Order is Coffee Latte, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Coffee Latte, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = cll,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label21;
+                        }
+                    Label22:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label22;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A8":
+                    case "a8":
+                    Label23:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int mm = 75;
+                            string ans;
+                            string itemCode = "A8" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mocha, Size " + choice1, Quantity = quantityA1M, Price = mm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mocha, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = mm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (mm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mocha, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mocha, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (mm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += mm * quantityA1M;
+                                Console.WriteLine("Your Order is Mocha, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mocha, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = mm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int ml = 90;
+                            string ans;
+                            string itemCode = "A8" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Mocha, Size " + choice1, Quantity = quantityA1M, Price = ml });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Mocha, Size Large",
+                                Quantity = quantityA1M,
+                                Price = ml
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (ml + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Mocha, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Mocha, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (ml + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += ml * quantityA1M;
+                                Console.WriteLine("Your Order is Mocha, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Mocha, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = ml,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label23;
+                        }
+                    Label24:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label24;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A9":
+                    case "a9":
+                    Label25:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int bm = 70;
+                            string ans;
+                            string itemCode = "A9" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Buko, Size " + choice1, Quantity = quantityA1M, Price = bm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Buko, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = bm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (bm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Buko, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Buko, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (bm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += bm * quantityA1M;
+                                Console.WriteLine("Your Order is Buko, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Buko, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = bm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int bl = 85;
+                            string ans;
+                            string itemCode = "A9" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Buko, Size " + choice1, Quantity = quantityA1M, Price = bl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Buko, Size Large",
+                                Quantity = quantityA1M,
+                                Price = bl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (bl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Buko, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Buko, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (bl + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += bl * quantityA1M;
+                                Console.WriteLine("Your Order is Buko, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Buko, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = bl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label25;
+                        }
+                    Label26:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label26;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "A10":
+                    case "a10":
+                    Label27:
+                        Console.WriteLine("M or L?");
+                        choice1 = Console.ReadLine();
+                        if (choice1 == "M" || choice1 == "m")
+                        {
+                            int bcm = 75;
+                            string ans;
+                            string itemCode = "A10" + choice1;
+                            int quantityA1M;
+                            Console.WriteLine("Enter Quantity");
+                        Label16:
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label16;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Buko Cheese, Size " + choice1, Quantity = quantityA1M, Price = bcm });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Buko Cheese, Size Medium",
+                                Quantity = quantityA1M,
+                                Price = bcm
+                            };
+                        Label7:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                            Label6:
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (bcm + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Buko Cheese, Size Medium\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                     choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+                                        itemsWithAddOns[itemCode].Price = orderTotalWithAddOns;
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Buko Cheese, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (bcm + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                    goto Label6;
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += bcm * quantityA1M;
+                                Console.WriteLine("Your Order is Buko Cheese, Size Medium and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Buko Cheese, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = bcm,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label7;
+                            }
+                        }
+
+                        else if (choice1 == "L" || choice1 == "l")
+                        {
+                            int bcl = 90;
+                            string ans;
+                            string itemCode = "A10" + choice1;
+                        Label15:
+                            Console.WriteLine("Enter Quantity");
+                            int quantityA1M;
+                            if (orderedItems.ContainsKey(itemCode))
+                            {
+
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+
+                                orderedItems[itemCode].Quantity += quantityA1M;
+                            }
+                            else
+                            {
+                                while (!int.TryParse(Console.ReadLine(), out quantityA1M))
+                                {
+                                    Console.WriteLine("Invalid input. Please enter a valid quantity:\n");
+                                    goto Label15;
+                                }
+                                orderedItems.Add(itemCode, new OrderItem { Name = "Buko Cheese, Size " + choice1, Quantity = quantityA1M, Price = bcl });
+                            }
+                            OrderItem orderedItem = new OrderItem
+                            {
+                                Name = "Buko Cheese, Size Large",
+                                Quantity = quantityA1M,
+                                Price = bcl
+                            };
+
+                        Label2:
+                            Console.WriteLine("Do you want to put Add ons?..\n Press Y or N");
+                            ans = Console.ReadLine();
+                            if (ans == "Y" || ans == "y")
+                            {
+                                Display();
+                                Console.WriteLine("Choose:");
+                                ans3 = Console.ReadLine();
+                                if (addOns.ContainsKey(ans3))
+                                {
+                                    orderedItem.HasAddOns = true;
+                                    orderTotalWithAddOns += (bcl + ans1) * quantityA1M;
+                                    Console.WriteLine("Your Order is Buko Cheese, Size Large\nQuantity: {1}, With Add-on: {2}\nTotal is {3}.00",
+                                                      choice1, quantityA1M, addOns[ans3], orderTotalWithAddOns);
+                                    orderedItem.add = addOns[ans3];
+                                    if (itemsWithAddOns.ContainsKey(itemCode))
+                                    {
+                                        itemsWithAddOns[itemCode].Quantity += quantityA1M;
+                                        itemsWithAddOns[itemCode].AddOns.Add(addOns[ans3]);
+
+                                    }
+                                    else
+                                    {
+                                        itemsWithAddOns.Add(itemCode, new OrderItem
+                                        {
+                                            Name = "Buko Cheese, Size " + choice1,
+                                            Quantity = quantityA1M,
+                                            Price = (bcl + ans1) * quantityA1M,
+                                            HasAddOns = true,
+                                            AddOns = new List<string> { addOns[ans3] }
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Add On does not Exist");
+                                }
+                            }
+                            else if (ans == "N" || ans == "n")
+                            {
+                                orderedItem.HasAddOns = false;
+                                orderTotalWithNoAddOns += bcl * quantityA1M;
+                                Console.WriteLine("Your Order is Buko Cheese, Size Large and Total is {0}.00", orderTotalWithNoAddOns);
+                                if (itemsWithoutAddOns.ContainsKey(itemCode))
+                                {
+                                    itemsWithoutAddOns[itemCode].Quantity += quantityA1M;
+                                    itemsWithoutAddOns[itemCode].Price = orderTotalWithNoAddOns;
+                                }
+                                else
+                                {
+                                    itemsWithoutAddOns.Add(itemCode, new OrderItem
+                                    {
+                                        Name = "Buko Cheese, Size " + choice1,
+                                        Quantity = quantityA1M,
+                                        Price = bcl,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("invalid");
+                                goto Label2;
+                            }
+                        }
+
+                        else
+                        {
+                            Console.Write("Invalid choice.. PLease try again\n");
+                            goto Label27;
+                        }
+                    Label28:
+                        Console.WriteLine("Do you want to Order again?\t Y or N?");
+                        ans4 = Convert.ToChar(Console.ReadLine());
+                        if (ans4 == 'Y' || ans4 == 'y')
+                        {
+                            goto Label;
+                        }
+                        else if (ans4 == 'N' || ans4 == 'n')
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Choice\n");
+                            goto Label28;
+                        }
+                        Console.ReadLine();
+                        break;
+
+                    case "B1":
+                    case "b1":
+                        int o1 = 65;
+                        string item = "B1";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("OverLoad(Giant Hotdog/Brown/Lettuce/Cucumber/Mayo/Ketchup/Grated Cheese)");
+                    Label30:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label30;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o1;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Hotdog Brown: Overload", Quantity = quan, Price = quan * o1 });
+                        }
+
+                        sand = quan * o1;
+                        Console.WriteLine("Your Order Is Hotdog Brown: Overload, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o1;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Hotdog Brown: Overload",
+                                Quantity = quan,
+                                Price = quan * o1,
+                            });
+                        }
+                        gtotal += sand;
+                    Label31:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label31;
+                        }
+                        break;
+
+                    case "B2":
+                    case "b2":
+                        int o2 = 55;
+                        item = "B2";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("OverLoad(King Size/Red/Lettuce/Cucumber/Mayo/Ketchup/Grated Cheese)");
+                    Label32:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label32;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o2;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Hotdog Red: Overload", Quantity = quan, Price = quan * o2 });
+                        }
+
+                        sand = quan * o2;
+                        Console.WriteLine("Your Order Is Hotdog Red: Overload, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o2;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Hotdog Red: Overload",
+                                Quantity = quan,
+                                Price = quan * o2,
+                            });
+                        }
+                        gtotal += sand;
+                    Label33:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label33;
+                        }
+                        break;
+
+                    case "B3":
+                    case "b3":
+                        int o3 = 75;
+                        item = "B3";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("OverLoad(Hungarian Sausage/Lettuce/Cucumber/Mayo/Ketchup/Grated Cheese)");
+                    Label34:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label34;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o3;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Sausage: Overload", Quantity = quan, Price = quan * o3 });
+                        }
+
+                        sand = quan * o3;
+                        Console.WriteLine("Your Order Is Sausage: Overload, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o3;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Sausage: Overload",
+                                Quantity = quan,
+                                Price = quan * o3,
+                            });
+                        }
+                        gtotal += sand;
+                    Label35:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label35;
+                        }
+                        break;
+
+                    case "B4":
+                    case "b4":
+                        int o4 = 35;
+                        item = "B4";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Regular(King Size Hotdog/Red/Mayo/Ketchup)");
+                    Label36:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label36;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o4;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Hotdog Red: Regular", Quantity = quan, Price = quan * o4 });
+                        }
+
+                        sand = quan * o4;
+                        Console.WriteLine("Your Order Is Hotdog Red: Regular, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o4;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Hotdog Red: Regular",
+                                Quantity = quan,
+                                Price = quan * o4,
+                            });
+                        }
+                        gtotal += sand;
+                    Label37:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label37;
+                        }
+                        break;
+
+                    case "B5":
+                    case "b5":
+                        int o5 = 45;
+                        item = "B5";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Regular(Giant Hotdog/Brown/Mayo/Ketchup)");
+                    Label38:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label38;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o5;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Hotdog Brown: Regular", Quantity = quan, Price = quan * o5 });
+                        }
+
+                        sand = quan * o5;
+                        Console.WriteLine("Your Order Is Hotdog Brown: Regular, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o5;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Hotdog Brown: Regular",
+                                Quantity = quan,
+                                Price = quan * o5,
+                            });
+                        }
+                        gtotal += sand;
+                    Label39:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label39;
+                        }
+                        break;
+
+                    case "B6":
+                    case "b6":
+                        int o6 = 55;
+                        item = "B6";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Regular(Hungarian Sausage/Mayo/Ketchup)");
+                    Label40:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label40;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * o6;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Hungarian Sausage: Regular", Quantity = quan, Price = quan * o6 });
+                        }
+
+                        sand = quan * o6;
+                        Console.WriteLine("Your Order Is Hungarian Sausage: Regular, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * o6;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Hungarian Sausage: Regular",
+                                Quantity = quan,
+                                Price = quan * o6,
+                            });
+                        }
+                        gtotal += sand;
+                    Label41:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label41;
+                        }
+                        break;
+
+                    case "C1":
+                    case "c1":
+                        int b1 = 20;
+                        item = "C1";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Estofado");
+                    Label42:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label42;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b1;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Estofado", Quantity = quan, Price = quan * b1 });
+                        }
+
+                        sand = quan * b1;
+                        Console.WriteLine("Your Order Is Estofado, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b1;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Estofado",
+                                Quantity = quan,
+                                Price = quan * b1,
+                            });
+                        }
+                        gtotal += sand;
+                    Label43:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label43;
+                        }
+                        break;
+
+                    case "C2":
+                    case "c2":
+                        int b2 = 20;
+                        item = "C2";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Ham");
+                    Label44:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label44;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b2;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Ham", Quantity = quan, Price = quan * b2 });
+                        }
+
+                        sand = quan * b2;
+                        Console.WriteLine("Your Order Is Ham, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b2;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Ham",
+                                Quantity = quan,
+                                Price = quan * b2,
+                            });
+                        }
+                        gtotal += sand;
+                    Label45:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label45;
+                        }
+                        break;
+
+                    case "C3":
+                    case "c3":
+                        int b3 = 20;
+                        item = "C3";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Cheese");
+                    Label46:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label46;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b3;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Cheese", Quantity = quan, Price = quan * b3 });
+                        }
+
+                        sand = quan * b3;
+                        Console.WriteLine("Your Order Is Cheese, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b3;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Cheese",
+                                Quantity = quan,
+                                Price = quan * b3,
+                            });
+                        }
+                        gtotal += sand;
+                    Label47:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label47;
+                        }
+                        break;
+
+                    case "C4":
+                    case "c4":
+                        int b4 = 20;
+                        item = "C4";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Egg");
+                    Label48:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label48;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b4;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Egg", Quantity = quan, Price = quan * b4 });
+                        }
+
+                        sand = quan * b4;
+                        Console.WriteLine("Your Order Is Egg, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b4;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Egg",
+                                Quantity = quan,
+                                Price = quan * b4,
+                            });
+                        }
+                        gtotal += sand;
+                    Label49:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label49;
+                        }
+                        break;
+
+                    case "C5":
+                    case "c5":
+                        int b5 = 20;
+                        item = "C5";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Patty");
+                    Label50:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label50;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b5;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Patty", Quantity = quan, Price = quan * b5 });
+                        }
+
+                        sand = quan * b5;
+                        Console.WriteLine("Your Order Is Patty, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b5;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Patty",
+                                Quantity = quan,
+                                Price = quan * b5,
+                            });
+                        }
+                        gtotal += sand;
+                    Label51:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label51;
+                        }
+                        break;
+
+                    case "C6":
+                    case "c6":
+                        int b6 = 20;
+                        item = "C6";
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Footlong");
+                    Label52:
+                        Console.WriteLine("Enter Quantity");
+                        while (!int.TryParse(Console.ReadLine(), out quan))
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid quantity:");
+                            goto Label52;
+                        }
+
+                        if (orderedItems.ContainsKey(item))
+                        {
+                            orderedItems[item].Quantity += quan;
+                            orderedItems[item].Price += quan * b6;
+                        }
+                        else
+                        {
+                            orderedItems.Add(item, new OrderItem { Name = "Footlong", Quantity = quan, Price = quan * b6 });
+                        }
+
+                        sand = quan * b6;
+                        Console.WriteLine("Your Order Is Footlong, Quantity: {0}, Price {1}", orderedItems[item].Quantity, orderedItems[item].Price);
+
+                        if (Sandwiches.ContainsKey(item))
+                        {
+                            Sandwiches[item].Quantity += quan;
+                            Sandwiches[item].Price += quan * b6;
+                        }
+                        else
+                        {
+                            Sandwiches.Add(item, new OrderItem
+                            {
+                                Name = "Footlong",
+                                Quantity = quan,
+                                Price = quan * b6,
+                            });
+                        }
+                        gtotal += sand;
+                    Label53:
+                        Console.WriteLine("Do you want to buy again?\t(Y/N)");
+                        choice4 = Console.ReadLine();
+                        if (choice4 == "Y" || choice4 == "y")
+                        {
+                            goto Label;
+                        }
+                        else if (choice4 == "N" || choice4 == "n")
+                        {
+                            gtotal += total;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Invalid Choice");
+                            goto Label53;
+                        }
+                        break;
+                    default:
+                        {
+                            Console.Write("Invalid entry. Please re-enter your choice: \n");
+                            goto Label;
+                        }
+                }
+                total += gtotal; //totals all the orders
+                total += orderTotalWithAddOns1 + orderTotalWithNoAddOns1;
+                total += orderTotalWithAddOns + orderTotalWithNoAddOns;
+                Console.WriteLine("GrandTotal: {0}", total);
+            Label13:
+                Console.WriteLine("Do you have a Discount?"); //discount is 10% per product for senior citizen only
+                choice3 = Console.ReadLine();
+                if (choice3 == "Y" || choice3 == "y")
+                {
+                    discount = (double)10 / 100;
+                    discount = (double)discount * total; //Computation for discounts
+                    discount = (double)total - discount;
+                    Console.WriteLine("Overall Total With Discount: {0}", discount);
+                Label11:
+                    Console.WriteLine("Enter Cash Tendered: ");
+                    cTendered = Convert.ToInt32(Console.ReadLine());
+                    if (cTendered >= discount)
+                    {
+                        double cTendered1 = (double)cTendered - discount;
+
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------"); //receipt
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("                            RECEIPT                           ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                    foreach (var item in Sandwiches.Values)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"     Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+
+                        }
+                        foreach (var item in itemsWithAddOns.Values)
+                        {
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"        Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+                            if (item.HasAddOns)
+                            {
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("     Add-ons:");
+                                foreach (var addon in item.AddOns)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine($"     - {addon}");
+                                }
+                            }
+
+                        }
+
+                        foreach (var item in itemsWithoutAddOns.Values)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("--------------------------------------------------------------");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"        Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+
+                        }
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n                   Grand Total: {discount}");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("                      Pay: {0}", cTendered);
+                        Console.WriteLine("                      Change: {0}", cTendered1);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("                 Thank You For Buying!\n                      At Teakim  ");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("                -Pob 3, Sta Cruz, Laguna- ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("                 Time Ordered: " + currentTime.ToString("HH:mm:ss"));
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                }
+                    else
+                    {
+                        Console.WriteLine("Unsufficient Cash");
+                        goto Label11;
+                    }
+
+
+                }
+                else if (choice3 == "N" || choice3 == "n") //if no discount
+                {
+                Label12:
+                    Console.WriteLine("Enter Cash Tendered: ");
+                    cTendered = Convert.ToInt32(Console.ReadLine());
+                    if (cTendered >= total)
+                    {
+                        double cTendered1 = cTendered - total;
+                        Console.ForegroundColor = ConsoleColor.Yellow; 
+                        Console.WriteLine("--------------------------------------------------------------"); //receipt
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("                            RECEIPT                           ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        foreach (var item in Sandwiches.Values)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"     Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+
+                        }
+                        foreach (var item in itemsWithAddOns.Values)
+                        {
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"     Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+                            if (item.HasAddOns)
+                            {
+
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("     Add-ons:");
+
+
+                                foreach (var addon in item.AddOns)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine($"     - {addon}");
+                                }
+                            }
+
+                        }
+
+                        foreach (var item in itemsWithoutAddOns.Values)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("--------------------------------------------------------------");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"     Item: {item.Name}, Quantity: {item.Quantity}, Price: {item.Price}");
+
+                        }
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n                   Grand Total: {total}");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("                      Pay: {0}", cTendered);
+                        Console.WriteLine("                      Change: {0}", cTendered1);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("                 Thank You For Buying!\n                      At Teakim ");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("                -Pob 3, Sta Cruz, Laguna- ");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("                 Time Ordered: " + currentTime.ToString("HH:mm:ss"));
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("--------------------------------------------------------------");
+
+
+                }
+                    else
+                    {
+                        Console.WriteLine("Unsufficient Cash");
+                        goto Label12;
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Answer");
+                    goto Label13;
+
+                }
+               Console.ReadLine();
+        Label55:
+            Console.WriteLine("Type \"E\" to Exit ");
+            string res = Console.ReadLine();
+                if (res == "E" || res == "e")
+                {
+
+                Console.WriteLine("The Program has ended");
+                Console.ReadLine();
+                Environment.Exit(0);
+                }
+                else
+                {
+                    Console.WriteLine("Please type The Corresponding Letter");
+                    goto Label55;
+                }
+        }
+         static void Display()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("--------------------------------");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("|        ADD ON (P15.00)       |");
+            Console.WriteLine("--------------------------------");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("|       1 - Graham             |");
+            Console.WriteLine("|       2 - Nata               |");
+            Console.WriteLine("|       3 - Oreo               |");
+            Console.WriteLine("|       4 - Pearl              |");
+            Console.WriteLine("|       5 - Cheese             |");
+            Console.WriteLine("|       6 - Mango              |");
+            Console.WriteLine("--------------------------------");
+        }
+ }
+
+}
